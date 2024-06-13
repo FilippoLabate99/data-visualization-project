@@ -1,0 +1,75 @@
+.reveal.active{
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.reveal{
+    position: relative;
+    transform: translateY(150px);
+    opacity: 0;
+    transition: 1s all ease;
+}
+
+.tooltip, .tooltip2 {
+    position: absolute;
+    text-align: center;
+    width: 140px;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.grid line {
+    shape-rendering: crispEdges;  /* makes the gridlines sharp */
+}
+.grid path {
+    display: none;  /* hides the standard axis line */
+}
+
+.node rect {
+    fill-opacity: .9;
+    shape-rendering: crispEdges;
+  }
+  
+  .node text {
+    pointer-events: none;
+    text-shadow: 0 1px 0 #fff;
+  }
+  
+  .link {
+    fill: none;
+    stroke: #000;
+    stroke-opacity: .2;
+  }
+  
+  .link:hover {
+    stroke-opacity: .5;
+  }
+
+  .chip {
+    margin: 0 2px;
+    padding: 3px 5px;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .chip-radar {
+    margin: 0 2px;
+    padding: 3px 5px;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .chip-ridge {
+    margin: 0 2px;
+    padding: 3px 5px;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+  }
+  

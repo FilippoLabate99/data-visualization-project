@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Expectancy Project</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../style/fonts.css">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css"
+        integrity="sha512-pTaEn+6gF1IeWv3W1+7X7eM60TFu/agjgoHmYhAfLEU8Phuf6JKiiE8YmsNC0aCgQv4192s4Vai8YZ6VNM6vyQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"
+        integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+    <div id="loader" class="fixed top-0 left-0 w-screen h-screen bg-white flex justify-center items-center z-[99999]">
+        <img src="../../images/chart_loader.gif" class="w-24" />
+    </div>
+    <section id="hero"
+        class="h-screen bg-white flex justify-center items-center bg-[url('../../images/elderly-couple-uk.jpg')] opacity-[.4] bg-center bg-no-repeat"
+        style="background-size: 110%;">
+    </section>
+    <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center flex-col py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16">
+        <h1
+            class="w-[120%] mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl">
+            ❤️ Life Expectancy Project ❤️</h1>
+        <h2
+            class="w-[90%] lg:w-[80%] text-center mx-auto mb-2 text-xl font-bold tracking-tight leading-none text-gray-900 md:text-2xl lg:text-3xl">
+            Build an interactive website that displays a few data visualizations on temperature datasets <span
+                class="font-medium text-[#6A957C] hover:text-[#57886C] hover:underline cursor-pointer"
+                onclick="window.open('https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who')">⚕️ Life Expectancy
+                Dataset ⚕️</span></h2>
+        <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
+        </p>
+    </div>
+    <div class="absolute bottom-0 h-28 w-full bg-gradient-to-b from-transparent to-white"></div>
+
+    <section class="h-screen flex justify-center items-center">
+        <div class="flex flex-col items-center mx-auto my-24 reveal">
+            <h2 class="mb-6 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-4xl lg:text-5xl">
+                General problems on the dataset:</h2>
+            <h2 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
+            </h2>
+            <div class="flex flex-col items-start w-[80%]">
+                <p class="mb-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
+                    As data pre-processing we uploaded three datasets from the provided websites: one for minimum
+                    temperature, one for maximum temperatures and one for average temperatures.
+                </p>
+                <p class="mb-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
+                    Since 'state' and 'year' were saved under the same column using a specific code structure, we had to
+                    parse it in order to retrieve the two informations. In particular, if the code had length eight,
+                    first char was the 'state' identifier; otherwise, if the code had length nine or ten, the 'state'
+                    identifier was formed by the first two and first three chars respectively.
+                </p>
+                <p class="mb-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
+                    Next character was just a separator whereas the 2 characters still afterwards indicated the type of
+                    measurement of that record. Finally, the last 4 characters were the 'year' identifier.
+                </p>
+                <p class="mb-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
+                    In addition, we only considered records from the 50 American states, discarding all the others. We
+                    also had to convert temperatures of the tree datasets since they were in Fahrenheit and not in
+                    Celsius degrees.
+                </p>
+                <p class="mb-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
+                    Then, we had to handle Nan values that were originally mapped using a particular value (-99.90).
+                </p>
+                <p class="mb-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
+                    As last bit, we added one column indicating the type of that record (min, max or avg) and then we
+                    merged the three datasets.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="h-screen flex justify-center items-center">
+        <div class="flex flex-col items-center mx-auto my-24 reveal">
+            <h2 class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-4xl lg:text-5xl">
+                Linechart, Radarchart, Ridgechart</h2>
+            <h2
+                class="max-w-[80%] mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
+                Visualizing minimum, maximum and average temperatures in USA over years (1895-2023)
+            </h2>
+        </div>
+    </section>
+
+
+    <!--section class="h-screen flex justify-center items-center mb-20"-->
+    <section class="chart-section flex flex-col justify-center items-center mb-20">
+        <div class="flex flex-col items-center mx-auto my-24 reveal">
+            <h2 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
+                Linechart
+            </h2>
+            <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
+                First graph is the linechart that aims to display min, max, avg values of temperatures for each month of
+                each state and year. In particular, the x-axis corresponds to the different months while the y-axis
+                corresponds to the temperature values. This type of chart can be useful to show an increasing (or
+                decreasing) trend in temperature over the years.
+            </p>
+            <div class="mb-4">
+                <label>Select State: </label>
+                <select id="stateDropdown" class="outline-[#A2BDAD]"></select>
+            </div>
+
+            <div id="chart1" class="mb-10"></div>
+            <!--div id="selected-years" class="flex mb-4"></div-->
+            <!--p id="info_text_linearchart" class="italic hidden mb-10">Pass the mouse hover chips to isolate the year from the
+                others</p-->
+            <div id="chart1loader" class="w-[600px] h-[400px] flex justify-center items-center mb-10">
+                <img src="../../images/chart_loader.gif" class="w-20 rotate-90" />
+            </div>
+
+            <div class="mb-4">
+                <label>Select State: </label>
+                <select id="stateDropdown2" class="outline-[#A2BDAD]"></select>
+            </div>
+
+            <div id="chart1_2" class="mb-10"></div>
+            <!--div id="selected-years-2" class="flex mb-4"></div-->
+            <!--p id="info_text_linearchart_2" class="italic hidden mb-10">Pass the mouse hover chips to isolate the year from the
+                others</p-->
+            <div id="chart1_2loader" class="w-[600px] h-[400px] flex justify-center items-center">
+                <img src="../../images/chart_loader.gif" class="w-20 rotate-90" />
+            </div>
+
+        </div>
+    </section>
+
+    <section class="chart-section flex flex-col justify-center items-center">
+        <div class="flex flex-col items-center mx-auto my-24 reveal">
+            <h2 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
+                Barchart
+            </h2>
+            <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
+                For each state, we decided to make a barchart plot of tree's amount per city. With mouse over, tree's
+                common name, tree's average height and its exact amount are shown.</p>
+            <div>
+                <label>Select Year: </label>
+                <select id="yearDropdown" class="outline-[#A2BDAD]"></select>
+            </div>
+
+            <select id='states-selector' class="w-[75%]"></select>
+
+            <div id="chart4" class="mb-10"></div>
+            <div id="selected-states" class="flex mb-4"></div>
+            <div id="chart4loader" class="w-[600px] h-[400px] flex justify-center items-center">
+                <img src="../../images/chart_loader.gif" class="w-20 rotate-90" />
+            </div>
+        </div>
+    </section>
+
+    <!--section class="h-screen flex justify-center items-center mb-20">
+        <div class="flex flex-col items-center mx-auto my-24 reveal">
+            <h2 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
+                Radar chart
+            </h2>
+            <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
+                Second graph is the radarchart. This time, for each state and year, we have three different
+                visualizations (min, max and avg). This type of chart shows how the same type of temperature measurement
+                is different among the months: this can be useful to compare, for a particular state, the temperature
+                values for each month over the selected years.
+            </p>
+            <div id="chart2" class="flex justify-around w-screen">
+                <div id="chart_radar1" class="w-[30%] mx-4 flex justify-center items-center"></div>
+                <div id="chart_radar2" class="w-[30%] mx-4"></div>
+                <div id="chart_radar3" class="w-[30%] mx-4"></div>
+            </div>
+            <div id="selected-years-radar" class="flex"></div>
+            <p id="info_text_radarrchart" class="italic hidden">Pass the mouse hover chips to isolate the year from the
+                others</p>
+            <div id="chart2loader" class="w-[600px] h-[400px] flex justify-center items-center">
+                <img src="../../images/chart_loader.gif" class="w-20 rotate-90" />
+            </div>
+        </div>
+    </section-->
+
+    <section class="chart-section flex flex-col justify-center items-center mb-20">
+        <div class="flex flex-col items-center mx-auto my-24 reveal">
+            <h2 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
+                Ridge chart
+            </h2>
+            <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
+                Last graph is the ridgechart that aims to show minimum and maximum temperature distributions, computed
+                using Kernel Density Estimation (KDE), of the selected states according to the selected years.<br />
+                For each year, the lighter area represents the minimum temperature distribution while the darker area represents the
+                maximum temperature distribution.
+            </p>
+            <select id='states-selector-ridge' class="w-[75%]"></select>
+            <div id="chart3" class="flex justify-around w-screen">
+            </div>
+            <div id="selected-states-ridge" class="flex mb-4"></div>
+            <p id="info_text_ridgechart" class="italic hidden">Pass the mouse hover chips to isolate the year from the
+                others</p>
+            <div id="chart3loader" class="w-[600px] h-[400px] flex justify-center items-center">
+                <img src="../../images/chart_loader.gif" class="w-20 rotate-90" />
+            </div>
+        </div>
+    </section>
+
+    <section class="chart-section flex flex-col justify-center items-center">
+        <div class="flex flex-col items-center mx-auto my-24 reveal">
+            <h2 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
+                Heatmap
+            </h2>
+            <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
+                For each state, we plotted an heatmap describing the abundance of its top 5 abundant trees for each city
+                of the selected state.</p>
+            <div>
+                <label>Select State: </label>
+                <select id="stateDropdown5" class="outline-[#A2BDAD]"></select>
+            </div>
+            <div id="chart5" class="mb-10"></div>
+            <div id="chart5loader" class="w-[600px] h-[400px] flex justify-center items-center">
+                <img src="../../images/chart_loader.gif" class="w-20 rotate-90" />
+            </div>
+        </div>
+    </section>
+
+    <section class="chart-section flex flex-col justify-center items-center mb-20">
+        <div class="flex flex-col items-center mx-auto my-24 reveal">
+            <h2 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
+                Choropleth Map
+            </h2>
+            <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
+                The choropleth map aims to visualize the tree distribution in each USA state. You can mouse over a single state to obtain information about its area or its tree abundance. As you can read from the legend beside, states for which we don't have any information about are mapped with the grey color. 
+            </p>
+            <div>
+                <label>Select Year: </label>
+                <select id="yearDropdown6" class="outline-[#A2BDAD]"></select>
+            </div>
+            <div id="chart6" class="mb-10"></div>
+            <div id="chart6loader" class="w-[600px] h-[400px] flex justify-center items-center">
+                <img src="../../images/chart_loader.gif" class="w-20 rotate-90" />
+            </div>
+        </div>
+    </section>
+
+    <div class="fixed flex items-center bottom-10 left-10 bg-[#0077b6] text-white px-4 py-3 rounded-lg cursor-pointer"
+        id="visionDefectDiv">
+        <label class="cursor-pointer" id="visionDefectLabel">Vision Defect</label>
+        <select id="visionDefectDropdown"
+            class="ml-2 w-0 transition-all duration-800 ease-out bg-[#0077b6] text-white outline-[#0096c7] overflow-hidden">
+            <option id="normal" value="normal">Normal</option>
+            <option id="deuteranopia" value="deuteranopia">Deuteranopia (Red-Green)</option>
+            <option id="protanopia" value="protanopia">Protanopia (Red-Green)</option>
+            <option id="protanomaly" value="protanomaly">Protanomaly (Reduced sensitivity to red light)</option>
+            <option id="deuteranomaly" value="deuteranomaly">Deuteranomaly (Reduced sensitivity to green light)</option>
+            <option id="tritanopia" value="tritanopia">Tritanopia (Blue-Yellow)</option>
+            <option id="tritanomaly" value="tritanomaly">Tritanomaly (Reduced sensitivity to blue light)</option>
+            <option id="monochromacy" value="monochromacy">Monochromacy (Achromatopsia)</option>
+            <option id="cone-monochromacy" value="cone-monochromacy">Cone Monochromacy</option>
+            <option id="blue-cone-monochromacy" value="blue-cone-monochromacy">Blue Cone Monochromacy</option>
+        </select>
+        <div class="relative">
+            <div id="helpOnVisionDefects" class="ml-2 hidden justify-center items-center bg-[#03045e] p-2 rounded-full">
+                <img src="../../images/question-solid.svg" class="w-3.5 h-3.5" />
+            </div>
+            <div id="visionInfoDialog"
+                class="absolute hidden -translate-y-full -mt-6 -mr-6 w-80 bg-white text-black p-4 border border-gray-300 rounded-md shadow-lg">
+                <!-- Information about vision defects here -->
+                <h3>Types of Vision Defects:</h3>
+                <ul>
+                    <li><strong>Normal:</strong> Standard vision.</li>
+                    <li><strong>Deuteranopia:</strong> Red-Green blindness.</li>
+                    <li><strong>Protanopia:</strong> Another Red-Green blindness.</li>
+                    <li><strong>Protanomaly:</strong> Weakness with red light.</li>
+                    <li><strong>Deuteranomaly:</strong> Weakness with green light.</li>
+                    <li><strong>Tritanopia:</strong> Blue-Yellow blindness.</li>
+                    <li><strong>Tritanomaly:</strong> Weakness with blue light.</li>
+                    <li><strong>Monochromacy:</strong> Sees only grays.</li>
+                    <li><strong>Cone Monochromacy:</strong> Limited colors.</li>
+                    <li><strong>Blue Cone Monochromacy:</strong> Sees mostly blue-yellow.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Move across projects -->
+    <div class="mb-14 flex justify-center mt-2">
+        <!-- Home Button -->
+        <a href="../../"
+            class="flex items-center justify-center px-4 h-10 mr-3 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700">
+            <img src="../../images/house-solid.svg" class="w-3.5 h-3.5 mr-2" />
+            Back to home
+        </a>
+    </div>
+    <!-- Back to top -->
+    <button type="button" id="back-to-top"
+        class="hidden fixed right-10 bottom-10 w-10 h-10 justify-center items-center text-white bg-[#0077b6] hover:bg-[#03045e] focus:ring-4 focus:ring-[#0096c7] font-medium rounded-full text-sm focus:outline-none transition duration-500 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
+        onclick="window.scrollTo({top: 0, left: 0, behavior: 'smooth'})">
+        <img src="../../images/arrow-up-solid.svg" class="w-3.5 h-3.5" />
+    </button>
+
+    <script>
+        // Color schemes
+        const normalColors = [
+            "#008000",   // Green
+            "#00FF00",   // Lime Green
+            "#FFFF00",   // Yellow
+            "#FFA500",   // Orange
+            "#FF0000",   // Red
+            "#FF1493",   // Deep Pink
+            "#800080",   // Purple
+            "#8A2BE2",   // Blue Violet
+            "#0000FF",   // Blue
+            "#00BFFF",   // Deep Sky Blue
+            "#20B2AA",   // Light Sea Green
+            "#32CD32",   // Lime Green
+            "#ADFF2F",   // Green Yellow
+            "#FFD700",   // Gold
+            "#FF4500",   // Orange Red
+            "#FF69B4",   // Hot Pink
+            "#9370DB",   // Medium Purple
+            "#00CED1",   // Dark Turquoise
+            "#00FFFF",   // Cyan
+            "#87CEEB"    // Sky Blue
+        ]
+            ;
+        const deuteranopiaColors = ["#695A66", "#785A76", "#874A85", "#964A95", "#A53AA4", "#B42AB3", "#C41BC2", "#D30CD1", "#E20CE0", "#F10DEF"];
+        const protanopiaColors = ["#49586B", "#495879", "#495787", "#495696", "#4955A4", "#4A54B3", "#4B53C1", "#4C52D0", "#4D51DE", "#4E50ED"];
+        const tritanopiaColors = ["#57866D", "#66807C", "#758A8B", "#84959A", "#939FA9", "#A3A9B8", "#B2B4C7", "#C2BED6", "#D1C8E5", "#E0D3F4"];
+        const protanomalyColors = ["#525870", "#61627D", "#70738A", "#7F8498", "#8D94A5", "#9CA5B2", "#ABA6C0", "#BAB8CD", "#C9CADB", "#D8DBE8"];
+        const deuteranomalyColors = ["#615869", "#706478", "#806F88", "#8E7B98", "#9E87A8", "#AD93B7", "#BC9FC7", "#CBAAD6", "#DAB6E6", "#E9C2F5"];
+        const tritanomalyColors = ["#56876E", "#658281", "#758D90", "#84989E", "#93A2AD", "#A2ADBB", "#B1B8C9", "#C0C4D8", "#CFD0E6", "#DEDBF5"];
+        const monochromacyColors = ["#555555", "#666666", "#777777", "#888888", "#999999", "#AAAAAA", "#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE"];
+        const coneMonochromacyColors = ["#585858", "#696969", "#7A7A7A", "#8B8B8B", "#9C9C9C", "#ADADAD", "#BEBEBE", "#CFCFCF", "#E0E0E0", "#F1F1F1"];
+        const blueConeMonochromacyColors = ["#505050", "#616161", "#727272", "#838383", "#949494", "#A5A5A5", "#B6B6B6", "#C7C7C7", "#D8D8D8", "#E9E9E9"];
+
+        let currentColors = normalColors;
+        if ((tmp = localStorage.getItem("currentColors")) !== null) {
+            currentColors = tmp.split(",")
+            name = localStorage.getItem("currentColorsName")
+            document.querySelector("#" + name).setAttribute("selected", true)
+        }
+        const colors = d3.scaleOrdinal().range(currentColors);
+
+        // Tooltip
+        const tooltip = d3.select('body').append('div')
+            .attr('class', 'tooltip bg-[#33483B] text-white p-3 border rounded-md shadow-md')
+            .style('opacity', 0);
+
+        const svgWidth = 950, svgHeight = 500;
+        const margin = { top: 20, right: 60, bottom: 70, left: 150 };
+        const width = svgWidth - margin.left - margin.right;
+        const height = svgHeight - margin.top - margin.bottom;
+
+        const svgWidthr = 350, svgHeightr = 350;
+        const marginr = { top: 60, right: 60, bottom: 60, left: 60 };
+        const widthr = svgWidthr - marginr.left - marginr.right;
+        const heightr = svgHeightr - marginr.top - marginr.bottom;
+    </script>
+
+    </script>
+    
+    <script src="https://unpkg.com/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+    <script src="script/linechart.js"></script>
+    <script src="script/linechart_2.js"></script>
+    <script src="script/barchart.js"></script>
+    <script src="script/ridgechart.js"></script>
+    <script src="script/heatmap.js"></script>
+    <script src="https://unpkg.com/topojson@3"></script>
+    <script src="script/new_help.js"></script>
+    <script src="script/map.js"></script>
+
+    <script>
+
+        let yearList = [];
+        let selectedYears = yearList.slice(0, 1);
+        let firstTryAddState = false;
+
+        // Load data
+        let data = [];
+        d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQFydRs-6cI6WKCkypsneRn-2PmSoR3spyk7LH_w2rYdTimE1tD-0Ynp-ah7q_x4hfmiYYdnakQ8UqI/pub?gid=0&single=true&output=csv").then(function (csvdata) {
+            // convert year to integer
+            //console.log(csvdata);
+            csvdata.forEach(d => {
+                d._2000_ = +d._2000_;
+                d._2001_ = +d._2001_;
+                d._2002_ = +d._2002_;
+                d._2003_ = +d._2003_;
+                d._2004_ = +d._2004_;
+                d._2005_ = +d._2005_;
+                d._2006_ = +d._2006_;
+                d._2007_ = +d._2007_;
+                d._2008_ = +d._2008_;
+                d._2009_ = +d._2009_;
+                d._2010_ = +d._2010_;
+                d._2011_ = +d._2011_;
+                d._2012_ = +d._2012_;
+                d._2013_ = +d._2013_;
+                d._2014_ = +d._2014_;
+                d._2015_ = +d._2015_;
+            });
+            //console.log(csvdata);
+            data = csvdata;
+            //console.log("👁️ Data loaded");
+
+            d3.select("#stateDropdown")
+                .on("change", function () {
+                        updateChart1(this.value);
+                    })
+                .selectAll("option")
+                .data([...new Set(data.map(d => d.Country))])
+                .enter().append("option")
+                .attr("value", d => d)
+                .text(d => d);
+
+            // modify the css class .item to add a background color, remove background image
+            document.styleSheets[0].addRule(".selectize-input [data-value]", `background-color: ${currentColors[0]} !important;`);
+            document.styleSheets[0].addRule(".selectize-input [data-value]", `background-image: none !important;`);
+            document.styleSheets[0].addRule(".selectize-control.plugin-remove_button .item .remove", `border-left: 1px solid ${currentColors[0]} !important;`);
+            document.styleSheets[0].addRule(".selectize-control.multi .selectize-input>div", `border: 1px solid ${currentColors[0]} !important;`);
+            document.styleSheets[0].addRule(".selectize-control.multi .selectize-input>div", `background: ${currentColors[0]} !important;`);
+
+            // call updateChart1 and pass as list of years just the first year
+            updateChart1(document.getElementById("stateDropdown").value);
+
+            //d3.select("#info_text_linearchart").style("display", "block");
+        })
+    </script>
+
+    <script>
+        //const data_features = topojson.feature(sus, sus.objects.states).features;
+
+        // Load data
+        //let data6 = [];
+
+        //updateChart6();
+        /*
+        d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQFydRs-6cI6WKCkypsneRn-2PmSoR3spyk7LH_w2rYdTimE1tD-0Ynp-ah7q_x4hfmiYYdnakQ8UqI/pub?gid=0&single=true&output=csv").then(function (csvdata) {
+            console.log("👁️ Data6 loaded");
+            
+            csvdata.forEach(d => {                
+                d._2000_ = +d._2000_;
+                d._2001_ = +d._2001_;
+                d._2002_ = +d._2002_;
+                d._2003_ = +d._2003_;
+                d._2004_ = +d._2004_;
+                d._2005_ = +d._2005_;
+                d._2006_ = +d._2006_;
+                d._2007_ = +d._2007_;
+                d._2008_ = +d._2008_;
+                d._2009_ = +d._2009_;
+                d._2010_ = +d._2010_;
+                d._2011_ = +d._2011_;
+                d._2012_ = +d._2012_;
+                d._2013_ = +d._2013_;
+                d._2014_ = +d._2014_;
+                d._2015_ = +d._2015_;
+            });
+
+
+
+            data6 = csvdata;
+            //console.log(data6);
+        })  
+        */      
+    </script>
+
+
+    <script>
+        function updateCharts() {
+            // modify the css class .item to add a background color, remove background image
+            document.styleSheets[0].addRule(".selectize-input [data-value]", `background-color: ${currentColors[1]} !important;`);
+            document.styleSheets[0].addRule(".selectize-input [data-value]", `background-image: none !important;`);
+            document.styleSheets[0].addRule(".selectize-control.plugin-remove_button .item .remove", `border-left: 1px solid ${currentColors[0]} !important;`);
+            document.styleSheets[0].addRule(".selectize-control.multi .selectize-input>div", `border: 1px solid ${currentColors[0]} !important;`);
+            document.styleSheets[0].addRule(".selectize-control.multi .selectize-input>div", `background: ${currentColors[1]} !important;`);
+
+            // call updatechart1 with the year range as array
+            updateChart1(selectedYears, document.querySelector("#stateDropdown").value)
+            //updateChart2(document.querySelector("#stateDropdown").value)
+            updateChart3(document.querySelector("#stateDropdown").value)
+            updateChart6()
+        }
+
+        document.getElementById('visionDefectDropdown').addEventListener('change', function () {
+            switch (this.value) {
+                case "normal":
+                    currentColors = normalColors;
+                    break;
+                case "deuteranopia":
+                    currentColors = deuteranopiaColors;
+                    break;
+                case "protanopia":
+                    currentColors = protanopiaColors;
+                    break;
+                case "tritanopia":
+                    currentColors = tritanopiaColors;
+                    break;
+                case "protanomaly":
+                    currentColors = protanomalyColors;
+                    break;
+                case "deuteranomaly":
+                    currentColors = deuteranomalyColors;
+                    break;
+                case "tritanomaly":
+                    currentColors = tritanomalyColors;
+                    break;
+                case "monochromacy":
+                    currentColors = monochromacyColors;
+                    break;
+                case "cone-monochromacy":
+                    currentColors = coneMonochromacyColors;
+                    break;
+                case "blue-cone-monochromacy":
+                    currentColors = blueConeMonochromacyColors;
+                    break;
+                default:
+                    currentColors = normalColors;  // default to normal colors if an unrecognized value is chosen
+                    break;
+            }
+            colors.range(currentColors);
+            localStorage.setItem("currentColors", currentColors)
+            localStorage.setItem("currentColorsName", this.value)
+            updateCharts();
+        });
+    </script>
+    <script src="script/main.js"></script>
+</body>
+
+</html>
