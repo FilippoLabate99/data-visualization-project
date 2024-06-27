@@ -37,12 +37,14 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQFydRs-6cI6WKCkypsneRn-
         //updateChart3(this.value, selectedYears);
     })
 
+    /*
     // modify the css class .item to add a background color, remove background image
     document.styleSheets[0].addRule(".selectize-input [data-value]", `background-color: ${currentColors[0]} !important;`);
     document.styleSheets[0].addRule(".selectize-input [data-value]", `background-image: none !important;`);
     document.styleSheets[0].addRule(".selectize-control.plugin-remove_button .item .remove", `border-left: 1px solid ${currentColors[0]} !important;`);
     document.styleSheets[0].addRule(".selectize-control.multi .selectize-input>div", `border: 1px solid ${currentColors[0]} !important;`);
     document.styleSheets[0].addRule(".selectize-control.multi .selectize-input>div", `background: ${currentColors[0]} !important;`);
+    */
 
     updateChart1_2(document.getElementById("stateDropdown2").value);
 
@@ -124,6 +126,7 @@ updateChart1_2 = function (Country = data[0].Country) {
         .datum(dataLine_2)
         .attr("fill", "none")
         .attr("stroke", "#0077b6")
+        //.attr("stroke", currentColors[10])
         .attr("stroke-width", 1.5)
         .attr("id", `line_2`)
         .attr("opacity", 0.8)
@@ -143,6 +146,7 @@ updateChart1_2 = function (Country = data[0].Country) {
         .attr("cy", function (d) { return y(d.y) })
         .attr("r", 3)
         .attr("fill", "#0096c7")
+        //.attr("fill", currentColors[9])
         .attr("cursor", "pointer")
         .attr("class", `mindot`)
         .attr("opacity", 0.8)

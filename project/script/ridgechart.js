@@ -1,4 +1,6 @@
 let updateChart3;
+//let statesListRidge = [];
+//let selectedStatesRidge = statesListRidge.slice(0, 1);
 
 d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQFydRs-6cI6WKCkypsneRn-2PmSoR3spyk7LH_w2rYdTimE1tD-0Ynp-ah7q_x4hfmiYYdnakQ8UqI/pub?gid=1659344214&single=true&output=csv").then(function (data) {
   
@@ -24,9 +26,9 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQFydRs-6cI6WKCkypsneRn-
   const width = svgWidth - margin.left - margin.right;
   const height = svgHeight - margin.top - margin.bottom;
 
-  states_chips_ridge = document.getElementById("selected-states-ridge")
-  states_chips_ridge.innerHTML = `<div class="chip-ridge" id="chip-ridge-0" style="background-color: ${currentColors[0]}">${statesListRidge[0]}</div>`
-  for (let i = 1; i < statesListRidge.length; i++) {
+  let states_chips_ridge = document.getElementById("selected-states-ridge")
+  //states_chips_ridge.innerHTML = `<div class="chip-ridge" id="chip-ridge-0" style="background-color: ${currentColors[0]}">${statesListRidge[0]}</div>`
+  for (let i = 0; i < statesListRidge.length; i++) {
     states_chips_ridge.innerHTML += `<div class="chip-ridge hidden" id="chip-ridge-${i}" style="background-color: ${currentColors[i % currentColors.length]}">${statesListRidge[i]}</div>`
   }
 
@@ -145,7 +147,9 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQFydRs-6cI6WKCkypsneRn-
         tooltip.transition()
           .duration(200)
           .style("opacity", .9);
-        tooltip.html("BMI distribution area for country: " + d.view.key)
+        //console.log(d)
+        tooltip.html("BMI distribution area for this country")
+        //tooltip.html("BMI distribution area for country: " + d.view.key)
           .style("left", (d.pageX + 10) + "px")
           .style("top", (d.pageY - 20) + "px");
       })
@@ -178,7 +182,8 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQFydRs-6cI6WKCkypsneRn-
         tooltip.transition()
           .duration(200)
           .style("opacity", .9);
-        tooltip.html("HIV distribution area for country: " + d.view.key)
+        tooltip.html("HIV distribution area for this country")
+        //tooltip.html("HIV distribution area for country: " + d.view.key)
           .style("left", (d.pageX + 10) + "px")
           .style("top", (d.pageY - 20) + "px");
       })
@@ -193,6 +198,10 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQFydRs-6cI6WKCkypsneRn-
       index = statesListRidge.indexOf(states[i]);
       document.getElementById(`chip-ridge-${index}`).style.backgroundColor = currentColors[i % currentColors.length];
     }
+
+    //console.log(selectedStatesRidge);
+  
+
     d3.select("#chart3loader").style("display", "none");
   }
 
@@ -210,6 +219,7 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQFydRs-6cI6WKCkypsneRn-
                 document.getElementById(`chip-ridge-${i}`).classList.add("hidden");
             }
         }
+        //console.log(selectedStatesRidge)
         updateChart3(selectedStatesRidge);
         /*
         if (!firstTryAddStateRidge && value.length === 2) {
@@ -229,12 +239,46 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQFydRs-6cI6WKCkypsneRn-
     plugins: ['remove_button']
   });
 
+  for (let i = 0; i < statesListRidge.length; i++) {  
+    document.getElementById(`chip-ridge-${i}`).addEventListener("mouseover", function () {
+      for (let j=0; j < statesListRidge.length; j++) {
+        //console.log('j: ',j);
+        if (j !== i) {
+          let bmiElement = document.getElementById(`BMI-${statesListRidge[j]}`);
+          let hivElement = document.getElementById(`HIV/AIDS-${statesListRidge[j]}`);
+
+          if (bmiElement) {
+              bmiElement.setAttribute("opacity", 0.05);
+          } 
+          if (hivElement) {
+              hivElement.setAttribute("opacity", 0.05);
+          } 
+        }
+      }
+    });
+    document.getElementById(`chip-ridge-${i}`).addEventListener("mouseout", function () {
+      for (let j=0; j < statesListRidge.length; j++) {
+        let bmiElement = document.getElementById(`BMI-${statesListRidge[j]}`);
+        let hivElement = document.getElementById(`HIV/AIDS-${statesListRidge[j]}`);
+
+        if (bmiElement) {
+            bmiElement.setAttribute("opacity", 0.7);
+        }
+        if (hivElement) {
+            hivElement.setAttribute("opacity", 0.7);
+        } 
+      }
+    });
+  }
+
+  /*
   // modify the css class .item to add a background color, remove background image
   document.styleSheets[0].addRule(".selectize-input [data-value]", `background-color: ${currentColors[0]} !important;`);
   document.styleSheets[0].addRule(".selectize-input [data-value]", `background-image: none !important;`);
   document.styleSheets[0].addRule(".selectize-control.plugin-remove_button .item .remove", `border-left: 1px solid ${currentColors[0]} !important;`);
   document.styleSheets[0].addRule(".selectize-control.multi .selectize-input>div", `border: 1px solid ${currentColors[0]} !important;`);
   document.styleSheets[0].addRule(".selectize-control.multi .selectize-input>div", `background: ${currentColors[0]} !important;`);
+  */
 
   // add options to the selectize
   let selectize = $("#states-selector-ridge")[0].selectize;

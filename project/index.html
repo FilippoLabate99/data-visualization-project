@@ -33,9 +33,10 @@
             class="w-[120%] mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl">
             ❤️ Life Expectancy Project ❤️</h1>
         <h2
-            class="w-[90%] lg:w-[80%] text-center mx-auto mb-2 text-xl font-bold tracking-tight leading-none text-gray-900 md:text-2xl lg:text-3xl">
-            Build an interactive website that displays a few data visualizations on temperature datasets <span
-                class="font-medium text-[#6A957C] hover:text-[#57886C] hover:underline cursor-pointer"
+            class="w-[100%] lg:w-[100%] text-center mx-auto mb-2 text-xl font-bold tracking-tight leading-none text-gray-900 md:text-2xl lg:text-3xl">
+            An interactive website that displays a few data visualizations on a life expectancy dataset. 
+            In particular, its main goal is to show, country by country, how this has varied over the years, including looking at what variables have influenced it. <span
+                class="font-medium text-[#0077b6] hover:text-[#0096c7] hover:underline cursor-pointer"
                 onclick="window.open('https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who')">⚕️ Life Expectancy
                 Dataset ⚕️</span></h2>
         <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
@@ -51,30 +52,30 @@
             </h2>
             <div class="flex flex-col items-start w-[80%]">
                 <p class="mb-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
-                    As data pre-processing we uploaded three datasets from the provided websites: one for minimum
-                    temperature, one for maximum temperatures and one for average temperatures.
+                    As data pre-processing I uploaded the dataset from the provided website.
                 </p>
                 <p class="mb-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
-                    Since 'state' and 'year' were saved under the same column using a specific code structure, we had to
-                    parse it in order to retrieve the two informations. In particular, if the code had length eight,
-                    first char was the 'state' identifier; otherwise, if the code had length nine or ten, the 'state'
-                    identifier was formed by the first two and first three chars respectively.
+                    Since some column names were bad formatted, I had to correct them. 
+                    Next I analyzed the entrues of 'Country' column in order to check if there were any invalid namens that needed to be removed but this was not the case.  
+                    However, I had to change some entries in this column in favor of using more common names to identify some states. 
+                    This was very helpful to me in the implementation of the choropleth map.
                 </p>
                 <p class="mb-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
-                    Next character was just a separator whereas the 2 characters still afterwards indicated the type of
-                    measurement of that record. Finally, the last 4 characters were the 'year' identifier.
+                    At this point I was ready to select data for individual graphs. 
+                    The process was the same for all: selecting the 'Country' and 'Year' columns, 
+                    selecting the column of interest to show on the current graph, sorting the resulting rows, and removing null values.
                 </p>
                 <p class="mb-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
-                    In addition, we only considered records from the 50 American states, discarding all the others. We
-                    also had to convert temperatures of the tree datasets since they were in Fahrenheit and not in
-                    Celsius degrees.
+                    Also, for each graph, I had to reformat the data using 'Country' as a pivot, thus going to have, instead of the other two columns,
+                    a new column for each different value of 'Year' with, as value, the value that the third column had for that 'Country'-'Year' pair.
                 </p>
                 <p class="mb-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
-                    Then, we had to handle Nan values that were originally mapped using a particular value (-99.90).
+                    Slightly different discussion regarding the ridgechart as the columns, excluding 'Country' and 'Year', were two and no longer one. 
+                    To keep the data formatting the same, I simply added a new 'Type' column indicating which of the two columns the mapped value referred to.
+                    For the heatmap instead, I calculated the correlation index between variables with a script. 
                 </p>
                 <p class="mb-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
-                    As last bit, we added one column indicating the type of that record (min, max or avg) and then we
-                    merged the three datasets.
+                    Finally, for the implementation of the map, using a script, I linked my dataset with a JSON file that would draw the map in order to add properties containing the dataset data to it.
                 </p>
             </div>
         </div>
@@ -83,10 +84,10 @@
     <section class="h-screen flex justify-center items-center">
         <div class="flex flex-col items-center mx-auto my-24 reveal">
             <h2 class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-4xl lg:text-5xl">
-                Linechart, Radarchart, Ridgechart</h2>
+                Line Charts</h2>
             <h2
                 class="max-w-[80%] mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
-                Visualizing minimum, maximum and average temperatures in USA over years (1895-2023)
+                Visualizing, for each country, the life expectancy and adult mortality along the years (2000-2015), respectively.
             </h2>
         </div>
     </section>
@@ -96,16 +97,15 @@
     <section class="chart-section flex flex-col justify-center items-center mb-20">
         <div class="flex flex-col items-center mx-auto my-24 reveal">
             <h2 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
-                Linechart
+                Line Charts
             </h2>
             <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
-                First graph is the linechart that aims to display min, max, avg values of temperatures for each month of
-                each state and year. In particular, the x-axis corresponds to the different months while the y-axis
-                corresponds to the temperature values. This type of chart can be useful to show an increasing (or
-                decreasing) trend in temperature over the years.
+                The first graph is the line chart which, when a country is selected, 
+                shows how life expectancy for that country (y-axis) has varied over the years (x-axis). 
+                Such a chart is useful when one wants to visualize effectively how, especially with regard to poorer countries, the trend appears to be upward.
             </p>
             <div class="mb-4">
-                <label>Select State: </label>
+                <label>Select Country: </label>
                 <select id="stateDropdown" class="outline-[#A2BDAD]"></select>
             </div>
 
@@ -116,9 +116,13 @@
             <div id="chart1loader" class="w-[600px] h-[400px] flex justify-center items-center mb-10">
                 <img src="../../images/chart_loader.gif" class="w-20 rotate-90" />
             </div>
-
+            <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
+                The second graph, on the other hand, is the line chart that, when a country is selected, 
+                shows how adult mortality for that country (y-axis) has varied over the years (x-axis). 
+                In this case, thanks to such a graph, we can see how the trend tends instead toward a slight decrease along the years.
+            </p>
             <div class="mb-4">
-                <label>Select State: </label>
+                <label>Select Country: </label>
                 <select id="stateDropdown2" class="outline-[#A2BDAD]"></select>
             </div>
 
@@ -136,11 +140,12 @@
     <section class="chart-section flex flex-col justify-center items-center">
         <div class="flex flex-col items-center mx-auto my-24 reveal">
             <h2 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
-                Barchart
+                Bar Chart
             </h2>
             <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
-                For each state, we decided to make a barchart plot of tree's amount per city. With mouse over, tree's
-                common name, tree's average height and its exact amount are shown.</p>
+                This chart, when a year is selected, allows the display of a comparison of infant mortality values in that year for up to 10 countries.
+                Through it, it is possible to highlight differences in the quality of life in different states.
+            </p>
             <div>
                 <label>Select Year: </label>
                 <select id="yearDropdown" class="outline-[#A2BDAD]"></select>
@@ -156,47 +161,22 @@
         </div>
     </section>
 
-    <!--section class="h-screen flex justify-center items-center mb-20">
-        <div class="flex flex-col items-center mx-auto my-24 reveal">
-            <h2 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
-                Radar chart
-            </h2>
-            <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
-                Second graph is the radarchart. This time, for each state and year, we have three different
-                visualizations (min, max and avg). This type of chart shows how the same type of temperature measurement
-                is different among the months: this can be useful to compare, for a particular state, the temperature
-                values for each month over the selected years.
-            </p>
-            <div id="chart2" class="flex justify-around w-screen">
-                <div id="chart_radar1" class="w-[30%] mx-4 flex justify-center items-center"></div>
-                <div id="chart_radar2" class="w-[30%] mx-4"></div>
-                <div id="chart_radar3" class="w-[30%] mx-4"></div>
-            </div>
-            <div id="selected-years-radar" class="flex"></div>
-            <p id="info_text_radarrchart" class="italic hidden">Pass the mouse hover chips to isolate the year from the
-                others</p>
-            <div id="chart2loader" class="w-[600px] h-[400px] flex justify-center items-center">
-                <img src="../../images/chart_loader.gif" class="w-20 rotate-90" />
-            </div>
-        </div>
-    </section-->
-
     <section class="chart-section flex flex-col justify-center items-center mb-20">
         <div class="flex flex-col items-center mx-auto my-24 reveal">
             <h2 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
-                Ridge chart
+                Ridge Chart
             </h2>
             <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
-                Last graph is the ridgechart that aims to show minimum and maximum temperature distributions, computed
-                using Kernel Density Estimation (KDE), of the selected states according to the selected years.<br />
-                For each year, the lighter area represents the minimum temperature distribution while the darker area represents the
-                maximum temperature distribution.
+                Next graph is the ridgechart that aims to show BMI and HIV/AIDS distributions, computed
+                using Kernel Density Estimation (KDE), of the selected countries (max 10) considering all the years stored in the dataset.<br />
+                For each country, the lighter area represents the BMI distribution while the darker area represents the HIV/AIDS distribution.
+                This allows for a more generic comparison of BMI and HIV/AIDS values than that obtained by looking at individual years.
             </p>
             <select id='states-selector-ridge' class="w-[75%]"></select>
             <div id="chart3" class="flex justify-around w-screen">
             </div>
             <div id="selected-states-ridge" class="flex mb-4"></div>
-            <p id="info_text_ridgechart" class="italic hidden">Pass the mouse hover chips to isolate the year from the
+            <p id="info_text_ridgechart" class="italic hidden">Pass the mouse hover chips to isolate the country from the
                 others</p>
             <div id="chart3loader" class="w-[600px] h-[400px] flex justify-center items-center">
                 <img src="../../images/chart_loader.gif" class="w-20 rotate-90" />
@@ -210,8 +190,10 @@
                 Heatmap
             </h2>
             <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
-                For each state, we plotted an heatmap describing the abundance of its top 5 abundant trees for each city
-                of the selected state.</p>
+                For each state, it is shown an heatmap describing the correlation between each selected variable.
+                This chart is useful to understand how, for each state, certain variables such as, in our case, 
+                adult mortality, infant mortality, BMI, HIV/AIDS and GDP are affected by each other.
+            </p>
             <div>
                 <label>Select State: </label>
                 <select id="stateDropdown5" class="outline-[#A2BDAD]"></select>
@@ -229,7 +211,7 @@
                 Choropleth Map
             </h2>
             <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
-                The choropleth map aims to visualize the tree distribution in each USA state. You can mouse over a single state to obtain information about its area or its tree abundance. As you can read from the legend beside, states for which we don't have any information about are mapped with the grey color. 
+                Last graph is the choropleth map that, when a year is selected, aims to visualize the life expectancy value for each country. You can mouse over a single state to obtain information about its exact value for that year. As you can read from the legend beside, states for which we don't have any information about are mapped with the grey color. 
             </p>
             <div>
                 <label>Select Year: </label>
@@ -242,7 +224,8 @@
         </div>
     </section>
 
-    <div class="fixed flex items-center bottom-10 left-10 bg-[#0077b6] text-white px-4 py-3 rounded-lg cursor-pointer"
+    
+    <!--div class="fixed flex items-center bottom-10 left-10 bg-[#0077b6] text-white px-4 py-3 rounded-lg cursor-pointer"
         id="visionDefectDiv">
         <label class="cursor-pointer" id="visionDefectLabel">Vision Defect</label>
         <select id="visionDefectDropdown"
@@ -264,7 +247,7 @@
             </div>
             <div id="visionInfoDialog"
                 class="absolute hidden -translate-y-full -mt-6 -mr-6 w-80 bg-white text-black p-4 border border-gray-300 rounded-md shadow-lg">
-                <!-- Information about vision defects here -->
+                
                 <h3>Types of Vision Defects:</h3>
                 <ul>
                     <li><strong>Normal:</strong> Standard vision.</li>
@@ -280,7 +263,7 @@
                 </ul>
             </div>
         </div>
-    </div>
+    </div-->
 
     <!-- Move across projects -->
     <div class="mb-14 flex justify-center mt-2">
@@ -299,6 +282,64 @@
     </button>
 
     <script>
+        /*
+        const normalColors = [
+            "#f7fbff",
+            "#deebf7",
+            "#c6dbef",
+            "#9ecae1",
+            "#6baed6",
+            "#4292c6",
+            "#2171b5",
+            "#08519c",
+            "#08306b",
+            "#031d54"
+        ];
+        */
+
+        const normalColors = [
+            // Sky Blue
+            "#87CEEB",  
+            // Cyan
+            "#00FFFF",   
+            // Dark Turquoise
+            "#00CED1",   
+            // Medium Purple
+            "#9370DB",   
+            // Hot Pink
+            "#FF69B4",   
+            // Orange Red
+            "#FF4500",   
+            // Gold
+            "#FFD700",   
+            // Green Yellow
+            "#ADFF2F",   
+            // Lime Green
+            "#32CD32",   
+            // Light Sea Green
+            "#20B2AA",   
+            // Deep Sky Blue
+            "#00BFFF",   
+            // Blue
+            "#0000FF",   
+            // Blue Violet
+            "#8A2BE2",   
+            // Purple
+            "#800080",   
+            // Deep Pink
+            "#FF1493",   
+            // Red
+            "#FF0000",   
+            // Orange
+            "#FFA500",   
+            // Yellow
+            "#FFFF00",   
+            // Lime Green
+            "#00FF00",   
+            // Green
+            "#008000"   
+        ]
+        /*
         // Color schemes
         const normalColors = [
             "#008000",   // Green
@@ -321,8 +362,11 @@
             "#00CED1",   // Dark Turquoise
             "#00FFFF",   // Cyan
             "#87CEEB"    // Sky Blue
-        ]
-            ;
+        ];
+        */
+        
+        /*
+        //const normalColors = ["#57886C", "#669379", "#769E87", "#85A894", "#94B3A1", "#A3BEAF", "#B3C9BC", "#C2D4CA", "#D1DFD7", "#E0E9E4"];
         const deuteranopiaColors = ["#695A66", "#785A76", "#874A85", "#964A95", "#A53AA4", "#B42AB3", "#C41BC2", "#D30CD1", "#E20CE0", "#F10DEF"];
         const protanopiaColors = ["#49586B", "#495879", "#495787", "#495696", "#4955A4", "#4A54B3", "#4B53C1", "#4C52D0", "#4D51DE", "#4E50ED"];
         const tritanopiaColors = ["#57866D", "#66807C", "#758A8B", "#84959A", "#939FA9", "#A3A9B8", "#B2B4C7", "#C2BED6", "#D1C8E5", "#E0D3F4"];
@@ -332,13 +376,16 @@
         const monochromacyColors = ["#555555", "#666666", "#777777", "#888888", "#999999", "#AAAAAA", "#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE"];
         const coneMonochromacyColors = ["#585858", "#696969", "#7A7A7A", "#8B8B8B", "#9C9C9C", "#ADADAD", "#BEBEBE", "#CFCFCF", "#E0E0E0", "#F1F1F1"];
         const blueConeMonochromacyColors = ["#505050", "#616161", "#727272", "#838383", "#949494", "#A5A5A5", "#B6B6B6", "#C7C7C7", "#D8D8D8", "#E9E9E9"];
+        */
 
         let currentColors = normalColors;
+        /*
         if ((tmp = localStorage.getItem("currentColors")) !== null) {
             currentColors = tmp.split(",")
             name = localStorage.getItem("currentColorsName")
             document.querySelector("#" + name).setAttribute("selected", true)
         }
+        */
         const colors = d3.scaleOrdinal().range(currentColors);
 
         // Tooltip
@@ -412,12 +459,13 @@
                 .attr("value", d => d)
                 .text(d => d);
 
+            
             // modify the css class .item to add a background color, remove background image
-            document.styleSheets[0].addRule(".selectize-input [data-value]", `background-color: ${currentColors[0]} !important;`);
+            document.styleSheets[0].addRule(".selectize-input [data-value]", `background-color: #0077b6 !important;`);
             document.styleSheets[0].addRule(".selectize-input [data-value]", `background-image: none !important;`);
-            document.styleSheets[0].addRule(".selectize-control.plugin-remove_button .item .remove", `border-left: 1px solid ${currentColors[0]} !important;`);
-            document.styleSheets[0].addRule(".selectize-control.multi .selectize-input>div", `border: 1px solid ${currentColors[0]} !important;`);
-            document.styleSheets[0].addRule(".selectize-control.multi .selectize-input>div", `background: ${currentColors[0]} !important;`);
+            document.styleSheets[0].addRule(".selectize-control.plugin-remove_button .item .remove", `border-left: 1px solid #0077b6 !important;`);
+            document.styleSheets[0].addRule(".selectize-control.multi .selectize-input>div", `border: 1px solid #0077b6 !important;`);
+            document.styleSheets[0].addRule(".selectize-control.multi .selectize-input>div", `background: #0077b6 !important;`);
 
             // call updateChart1 and pass as list of years just the first year
             updateChart1(document.getElementById("stateDropdown").value);
@@ -427,58 +475,24 @@
     </script>
 
     <script>
-        //const data_features = topojson.feature(sus, sus.objects.states).features;
-
-        // Load data
-        //let data6 = [];
-
-        //updateChart6();
         /*
-        d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQFydRs-6cI6WKCkypsneRn-2PmSoR3spyk7LH_w2rYdTimE1tD-0Ynp-ah7q_x4hfmiYYdnakQ8UqI/pub?gid=0&single=true&output=csv").then(function (csvdata) {
-            console.log("👁️ Data6 loaded");
-            
-            csvdata.forEach(d => {                
-                d._2000_ = +d._2000_;
-                d._2001_ = +d._2001_;
-                d._2002_ = +d._2002_;
-                d._2003_ = +d._2003_;
-                d._2004_ = +d._2004_;
-                d._2005_ = +d._2005_;
-                d._2006_ = +d._2006_;
-                d._2007_ = +d._2007_;
-                d._2008_ = +d._2008_;
-                d._2009_ = +d._2009_;
-                d._2010_ = +d._2010_;
-                d._2011_ = +d._2011_;
-                d._2012_ = +d._2012_;
-                d._2013_ = +d._2013_;
-                d._2014_ = +d._2014_;
-                d._2015_ = +d._2015_;
-            });
-
-
-
-            data6 = csvdata;
-            //console.log(data6);
-        })  
-        */      
-    </script>
-
-
-    <script>
         function updateCharts() {
+            
             // modify the css class .item to add a background color, remove background image
-            document.styleSheets[0].addRule(".selectize-input [data-value]", `background-color: ${currentColors[1]} !important;`);
-            document.styleSheets[0].addRule(".selectize-input [data-value]", `background-image: none !important;`);
-            document.styleSheets[0].addRule(".selectize-control.plugin-remove_button .item .remove", `border-left: 1px solid ${currentColors[0]} !important;`);
-            document.styleSheets[0].addRule(".selectize-control.multi .selectize-input>div", `border: 1px solid ${currentColors[0]} !important;`);
-            document.styleSheets[0].addRule(".selectize-control.multi .selectize-input>div", `background: ${currentColors[1]} !important;`);
+            //document.styleSheets[0].addRule(".selectize-input [data-value]", `background-color: ${currentColors[1]} !important;`);
+            //document.styleSheets[0].addRule(".selectize-input [data-value]", `background-image: none !important;`);
+            //document.styleSheets[0].addRule(".selectize-control.plugin-remove_button .item .remove", `border-left: 1px solid ${currentColors[0]} !important;`);
+            //document.styleSheets[0].addRule(".selectize-control.multi .selectize-input>div", `border: 1px solid ${currentColors[0]} !important;`);
+            //document.styleSheets[0].addRule(".selectize-control.multi .selectize-input>div", `background: ${currentColors[1]} !important;`);
+            
 
             // call updatechart1 with the year range as array
-            updateChart1(selectedYears, document.querySelector("#stateDropdown").value)
-            //updateChart2(document.querySelector("#stateDropdown").value)
-            updateChart3(document.querySelector("#stateDropdown").value)
-            updateChart6()
+            updateChart1(document.querySelector("#stateDropdown").value)
+            updateChart1_2(document.querySelector("#stateDropdown2").value)
+            updateChart3(selectedStatesRidge)
+            updateChart4(selectedStates)
+            updateCharts5()
+            updateCharts6(document.querySelector("#yearDropdown6").value)
         }
 
         document.getElementById('visionDefectDropdown').addEventListener('change', function () {
@@ -522,6 +536,7 @@
             localStorage.setItem("currentColorsName", this.value)
             updateCharts();
         });
+        */
     </script>
     <script src="script/main.js"></script>
 </body>

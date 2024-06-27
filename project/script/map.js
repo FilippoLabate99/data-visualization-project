@@ -31,18 +31,29 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQFydRs-6cI6WKCkypsneRn-
 updateChart6 = function (selYear = '_2000_') {
     d3.select("#chart6").selectAll("*").remove();
     d3.select("#chart6").style("display", "block");
-    console.log(selYear);
+    //console.log(selYear);
     const colorScale = d3.scaleSequential(d3.interpolateYlGnBu)
         .domain([30, 90]); 
     const projection = d3.geoMercator()
         .translate([svgWidth / 2, svgHeight / 2])
         .scale([70]);
     const path = d3.geoPath().projection(projection);
-    svg3 = d3.select("#chart6")
+    
+    const svg3 = d3.select("#chart6")
         .append("svg")
         .attr("width", svgWidth)
         .attr("height", svgHeight);
+
+    const zoom = d3.zoom()
+        .scaleExtent([1, 8]) // Limita lo zoom tra 1x e 8x
+        .on("zoom", function(event) {
+            world.attr("transform", event.transform);
+        });
+    
+    svg3.call(zoom);
+    
     const data_features = topojson.feature(sus, sus.objects.countries).features;
+    
     let world = svg3.append("g")
         .selectAll("path")
         .data(data_features)
@@ -51,7 +62,8 @@ updateChart6 = function (selYear = '_2000_') {
         .attr("data-name", d => d.properties.name)
         .attr("d", path)
         .attr("fill", function (d) {
-            return d.properties[selYear] !== "0" ? colorScale(d.properties[selYear]) : "gray";
+            //return d.properties[selYear] && d.properties[selYear] !== "0" ? colorScale(d.properties[selYear]) : colorScale(0);
+            return d.properties[selYear] ? colorScale(d.properties[selYear]) : "gray";
         })
         .attr("stroke", "black")
         .attr("stroke-width", 0.5)
@@ -67,7 +79,8 @@ updateChart6 = function (selYear = '_2000_') {
                 .style("opacity", .9)
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY - 20) + "px");
-            tooltip.html(d.properties[selYear] + " years");
+            //tooltip.html(d.properties[selYear] + " years");
+            tooltip.html(d.properties[selYear] ? d.properties[selYear] + " years" : "No data");
         })
     // mouseout reset the border of the state
     .on("mouseout", function (d) {

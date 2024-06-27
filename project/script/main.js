@@ -34,7 +34,7 @@ window.addEventListener("load", function () {
     const loader = document.querySelector("#loader");
     loader.className += " hidden";
 });
-
+/*
 const visionDefectDiv = document.getElementById('visionDefectDiv');
 const visionDefectDropdown = document.getElementById('visionDefectDropdown');
 const helpOnVisionDefects = document.getElementById('helpOnVisionDefects');
@@ -67,3 +67,4 @@ helpOnVisionDefects.addEventListener('mouseenter', function() {
 helpOnVisionDefects.addEventListener('mouseleave', function() {
     document.getElementById('visionInfoDialog').classList.add('hidden');
 });
+*/

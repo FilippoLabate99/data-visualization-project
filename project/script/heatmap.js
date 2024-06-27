@@ -1,5 +1,48 @@
 let updateChart5;
 
+// Funzione per creare la legenda
+function createLegend(svg, colorScale, width, height) {
+    const legendWidth = 300;
+    const legendHeight = 20;
+
+    const legendSvg = svg.append("g")
+        .attr("class", "legend")
+        .attr("transform", `translate(${width / 2 - legendWidth / 2}, ${height + 60})`);
+
+    const gradient = legendSvg.append("defs")
+        .append("linearGradient")
+        .attr("id", "gradient")
+        .attr("x1", "0%")
+        .attr("x2", "100%")
+        .attr("y1", "0%")
+        .attr("y2", "0%");
+
+    gradient.selectAll("stop")
+        .data(colorScale.range().map((color, i, nodes) => ({
+            offset: `${(100 * i) / (nodes.length - 1)}%`,
+            color: color
+        })))
+        .enter().append("stop")
+        .attr("offset", d => d.offset)
+        .attr("stop-color", d => d.color);
+
+    legendSvg.append("rect")
+        .attr("width", legendWidth)
+        .attr("height", legendHeight)
+        .style("fill", "url(#gradient)");
+
+    const xScale = d3.scaleLinear()
+        .domain(colorScale.domain())
+        .range([0, legendWidth]);
+
+    const xAxis = d3.axisBottom(xScale)
+        .ticks(5);
+
+    legendSvg.append("g")
+        .attr("transform", `translate(0,${legendHeight})`)
+        .call(xAxis);
+}
+
 d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQFydRs-6cI6WKCkypsneRn-2PmSoR3spyk7LH_w2rYdTimE1tD-0Ynp-ah7q_x4hfmiYYdnakQ8UqI/pub?gid=1541084187&single=true&output=csv").then(function (fifthData) {
 
     const svgWidth = 850, svgHeight = 500;
@@ -13,20 +56,14 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQFydRs-6cI6WKCkypsneRn-
         d.Correlation = +d.Correlation;
     });
 
-    //console.log(fifthData)
-
-    function preprocessData(stateData, scientific_names) {
-        return stateData
-    }
-
     updateChart5 = function () {
         d3.select("#chart5").selectAll("*").remove();
         d3.select("#chart5").style("display", "block");
 
         let country = d3.select("#stateDropdown5").property('value');
         let countryData = fifthData.filter(d => d.Country === country);
-        let var2 = [...new Set(countryData.map(d => d.Variable2))].sort();
-        let data = preprocessData(countryData, var2);
+        //let var2 = [...new Set(countryData.map(d => d.Variable2))].sort();
+        let data = countryData;
         //console.log(data)
 
         const x = d3.scaleBand()
@@ -57,9 +94,14 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQFydRs-6cI6WKCkypsneRn-
             .attr('class', 'axis')
             .call(d3.axisLeft(y));
 
+        let colorScale = d3.scaleSequential()
+            .interpolator(d3.interpolateYlGnBu)
+            .domain([-1, 1]);
+        /*
         let colorScale = d3.scaleLinear()
             .range([currentColors[currentColors.length - 1], currentColors[0]])
             .domain([0, d3.max(data, d => d.Correlation)])
+        */
 
         // Set up a transition for the chart update
         let t = d3.transition()
@@ -129,6 +171,8 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQFydRs-6cI6WKCkypsneRn-
             .style("fill", "#6A957C")
             .style("font-weight", "bold")
             //.text("Variable 1");
+
+        createLegend(svg, colorScale, width, height);
 
         d3.select("#chart5loader").style("display", "none");
     }
