@@ -35,7 +35,7 @@
         <h2
             class="w-[100%] lg:w-[100%] text-center mx-auto mb-2 text-xl font-bold tracking-tight leading-none text-gray-900 md:text-2xl lg:text-3xl">
             An interactive website that displays a few data visualizations on a life expectancy dataset. 
-            In particular, its main goal is to show, country by country, how this has varied over the years, including looking at what variables have influenced it. <span
+            In particular, the main goal is to show, country by country, how this has varied over the years, including looking at what variables have influenced it. <span
                 class="font-medium text-[#0077b6] hover:text-[#0096c7] hover:underline cursor-pointer"
                 onclick="window.open('https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who')">⚕️ Life Expectancy
                 Dataset ⚕️</span></h2>
@@ -55,8 +55,8 @@
                     As data pre-processing I uploaded the dataset from the provided website.
                 </p>
                 <p class="mb-2 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
-                    Since some column names were bad formatted, I had to correct them. 
-                    Next I analyzed the entrues of 'Country' column in order to check if there were any invalid namens that needed to be removed but this was not the case.  
+                    Since some column names and values were bad formatted, I had to correct them. 
+                    Next I analyzed the entries of 'Country' column in order to check if there were any invalid names that needed to be removed but this was not the case.  
                     However, I had to change some entries in this column in favor of using more common names to identify some states. 
                     This was very helpful to me in the implementation of the choropleth map.
                 </p>
@@ -101,9 +101,12 @@
             </h2>
             <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
                 The first graph is the line chart which, when a country is selected, 
-                shows how life expectancy for that country (y-axis) has varied over the years (x-axis). 
-                Such a chart is useful when one wants to visualize effectively how, especially with regard to poorer countries, the trend appears to be upward.
+                shows how life expectancy (y-axis) for that country has varied over the years (x-axis). 
+                Such a chart is useful for effectively visualizing how, especially with regard to poorer countries, the trend appears to be upward.
             </p>
+            <h3 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-1xl lg:text-1xl">
+                Life expectancy changes over years
+            </h3>
             <div class="mb-4">
                 <label>Select Country: </label>
                 <select id="stateDropdown" class="outline-[#A2BDAD]"></select>
@@ -118,9 +121,12 @@
             </div>
             <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
                 The second graph, on the other hand, is the line chart that, when a country is selected, 
-                shows how adult mortality for that country (y-axis) has varied over the years (x-axis). 
+                shows how adult mortality (y-axis) for that country has varied over the years (x-axis). 
                 In this case, thanks to such a graph, we can see how the trend tends instead toward a slight decrease along the years.
             </p>
+            <h3 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-1xl lg:text-1xl">
+                Adult mortality changes over years 
+            </h3>
             <div class="mb-4">
                 <label>Select Country: </label>
                 <select id="stateDropdown2" class="outline-[#A2BDAD]"></select>
@@ -140,11 +146,13 @@
     <section class="chart-section flex flex-col justify-center items-center">
         <div class="flex flex-col items-center mx-auto my-24 reveal">
             <h2 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
-                Bar Chart
+                Bar Chart for infant deaths comparison
             </h2>
             <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
                 This chart, when a year is selected, allows the display of a comparison of infant mortality values in that year for up to 10 countries.
-                Through it, it is possible to highlight differences in the quality of life in different states.
+                Through it, it is possible to highlight differences in the quality of life in different states. 
+                In particular, it can be seen that with regard to this aspect, the difference between African countries and others has always been particularly pronounced, however, going slightly down over the years. 
+                Moreover, this suggests that this result may be a consequence conditioned by some other aspect: we will elaborate on this later thanks to the heatmap of correlation between variables. 
             </p>
             <div>
                 <label>Select Year: </label>
@@ -164,13 +172,14 @@
     <section class="chart-section flex flex-col justify-center items-center mb-20">
         <div class="flex flex-col items-center mx-auto my-24 reveal">
             <h2 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
-                Ridge Chart
+                Ridge Chart showing HIV/AIDS and BMI distributions
             </h2>
             <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
                 Next graph is the ridgechart that aims to show BMI and HIV/AIDS distributions, computed
                 using Kernel Density Estimation (KDE), of the selected countries (max 10) considering all the years stored in the dataset.<br />
                 For each country, the lighter area represents the BMI distribution while the darker area represents the HIV/AIDS distribution.
                 This allows for a more generic comparison of BMI and HIV/AIDS values than that obtained by looking at individual years.
+                We can see how, ideally, the best situation would involve the distributions being as far apart as possible, having low values for HIV/AIDS and high values for BMI. 
             </p>
             <select id='states-selector-ridge' class="w-[75%]"></select>
             <div id="chart3" class="flex justify-around w-screen">
@@ -187,12 +196,13 @@
     <section class="chart-section flex flex-col justify-center items-center">
         <div class="flex flex-col items-center mx-auto my-24 reveal">
             <h2 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
-                Heatmap
+                Heatmap for variables correlation
             </h2>
             <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
                 For each state, it is shown an heatmap describing the correlation between each selected variable.
                 This chart is useful to understand how, for each state, certain variables such as, in our case, 
-                adult mortality, infant mortality, BMI, HIV/AIDS and GDP are affected by each other.
+                adult mortality, infant deaths, BMI, HIV/AIDS and GDP are affected by each other.
+                Relating to the above, we can see that, for African countries, there appears to be a very strong inverse correlation between child deaths and variables such as BMI and GDP.
             </p>
             <div>
                 <label>Select State: </label>
@@ -208,10 +218,11 @@
     <section class="chart-section flex flex-col justify-center items-center mb-20">
         <div class="flex flex-col items-center mx-auto my-24 reveal">
             <h2 class="mb-2 text-2xl font-bold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl">
-                Choropleth Map
+                Choropleth Map showing life expectancy
             </h2>
             <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48">
-                Last graph is the choropleth map that, when a year is selected, aims to visualize the life expectancy value for each country. You can mouse over a single state to obtain information about its exact value for that year. As you can read from the legend beside, states for which we don't have any information about are mapped with the grey color. 
+                Last graph is the choropleth map that, when a year is selected, aims to visualize the life expectancy value for each country. You can mouse over a single state to obtain information about its exact value for that year. As you can read from the legend beside, states for which we don't have any information about are mapped with the grey color.
+                It is easy to see the difference in life expectancy of the various states, or more generally continents, and how it has faded over the years.  
             </p>
             <div>
                 <label>Select Year: </label>
